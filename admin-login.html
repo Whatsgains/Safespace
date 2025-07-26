@@ -35,7 +35,7 @@
             const password = document.getElementById('adminPassword').value;
             console.log('Sending:', { username, password });
             try {
-                const response = await fetch('/.netlify/functions/app/login', { // Updated to /app/login
+                const response = await fetch('/.netlify/functions/app', { // Updated to /app/login
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password })

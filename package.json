@@ -1,0 +1,8 @@
+{
+  "name": "safe-space",
+  "version": "1.0.0",
+  "description": "Safe Space app for anonymous comments",
+  "dependencies": {
+    "@neondatabase/serverless": "^0.9.5"
+  }
+}

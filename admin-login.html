@@ -35,7 +35,7 @@
             const password = document.getElementById('adminPassword').value;
             console.log('Sending:', { username, password });
             try {
-                const response = await fetch('/.netlify/functions/app', { // Updated from /login to /app
+                const response = await fetch('/.netlify/functions/app/login', { // Updated to /app/login
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password })
@@ -63,8 +63,8 @@
         });
 
         async function loadComments() {
-            const response = await fetch('/.netlify/functions/app', { // Updated from /get-comments to /app
-                method: 'GET' // Assuming get-comments is now part of the same app.py
+            const response = await fetch('/.netlify/functions/app/get-comments', { // Updated to /app/get-comments
+                method: 'GET'
             });
             const comments = await response.json();
             const commentsSection = document.getElementById('comments-section');

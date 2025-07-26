@@ -8,7 +8,7 @@ import logging
 app = Flask(__name__)
 logging.basicConfig(level=logging.DEBUG)
 
-# Use environment variables for Neon connection
+# Neon database connection using environment variables
 conn = psycopg2.connect(
     dbname=os.environ.get("DB_NAME", "neondb"),
     user=os.environ.get("DB_USER", "neondb_owner"),
@@ -30,7 +30,6 @@ def login():
         password = data.get('password')
         if not username or not password:
             return jsonify({'error': 'Username and password are required'}), 400
-        logging.debug(f'Attempting login for username: {username}')
         with conn.cursor() as cur:
             cur.execute("SELECT password_hash FROM users WHERE username = %s", (username,))
             result = cur.fetchone()
@@ -47,10 +46,10 @@ def login():
 @app.route('/get-comments', methods=['GET'])
 def get_comments():
     try:
-        with conn.cursor(cursor_factory=RealDictCursor) as cur:
-            cur.execute("SELECT comment_id, content, submitted_at, is_approved FROM comments")
-            comments = cur.fetchall()
-        return jsonify(comments)
+      with conn.cursor(cursor_factory=RealDictCursor) as cur:
+          cur.execute("SELECT comment_id, content, submitted_at, is_approved FROM comments")
+          comments = cur.fetchall()
+      return jsonify(comments)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

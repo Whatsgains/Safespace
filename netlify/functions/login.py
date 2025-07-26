@@ -1,5 +1,4 @@
 import json
-import os
 import psycopg2
 
 def handler(event, context):
@@ -21,11 +20,11 @@ def handler(event, context):
             }
 
         conn = psycopg2.connect(
-            dbname=os.environ.get("DB_NAME"),
-            user=os.environ.get("DB_USER"),
-            password=os.environ.get("DB_PASSWORD"),
-            host=os.environ.get("DB_HOST"),
-            port=os.environ.get("DB_PORT", "5432"),
+            dbname="neondb",
+            user="neondb_owner",
+            password="npg_7MmDGidjKT9z",
+            host="ep-little-hat-ae0sgz0x-pooler.c-2.us-east-2.aws.neon.tech",
+            port="5432",
             sslmode="require",
             channel_binding="require"
         )

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safe Space - Share Your Thoughts</title>
+    <link rel="stylesheet" href="comment.css">
+</head>
+<body>
+    <header>
+        <img src="Safespace logo.png" alt="Safe Space Logo" class="logo">
+        <a href="index.html" class="back-button">Back to Home</a>
+    </header>
+    <main>
+        <section class="comment-form">
+            <h2>Share Your Thoughts</h2>
+            <p>Your words are safe here. Submit your thoughts anonymously—no one will know it’s you.</p>
+            <form id="commentForm">
+                <textarea id="commentInput" placeholder="Type your struggles, thoughts, or feelings..." required></textarea>
+                <button type="submit">Submit Anonymously</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <p>© 2025 Safe Space. All rights reserved.</p>
+    </footer>
+    <script>
+        document.getElementById('commentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const content = document.getElementById('commentInput').value;
+            const response = await fetch('/api/comments', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content })
+            });
+            alert(await response.text());
+            if (response.status === 201) document.getElementById('commentInput').value = '';
+        });
+    </script>
+</body>
+</html>

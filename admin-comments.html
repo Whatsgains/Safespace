@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safe Space - Admin Comments</title>
+    <link rel="stylesheet" href="admin-comments.css">
+</head>
+<body>
+    <header>
+        <img src="safespace logo.png" alt="Safe Space Logo" class="logo">
+        <a href="admin-login.html" class="back-button">Back to Admin Login</a>
+    </header>
+    <main>
+        <section class="admin-comments">
+            <h2>Admin: View Anonymous Comments</h2>
+            <p>Below are the anonymous comments submitted by users.</p>
+            <div id="commentList"></div>
+        </section>
+    </main>
+    <footer>
+        <p>© 2025 Safe Space. All rights reserved.</p>
+    </footer>
+    <script>
+        // Fetch comments on page load (assumes admin is authenticated)
+        window.addEventListener('load', async () => {
+            const response = await fetch('/api/comments', {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            if (response.ok) {
+                const comments = await response.json();
+                const commentList = document.getElementById('commentList');
+                comments.forEach((comment, index) => {
+                    const commentElement = document.createElement('p');
+                    commentElement.textContent = `User ${index + 1}: ${comment.content} (${new Date(comment.created_at).toLocaleString()})`;
+                    commentList.appendChild(commentElement);
+                });
+            } else {
+                alert('Error fetching comments');
+            }
+        });
+    </script>
+</body>
+</html>

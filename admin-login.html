@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safe Space - Admin Login</title>
+    <link rel="stylesheet" href="admin-login.css">
+</head>
+<body>
+    <header>
+        <img src="safespace logo.png" alt="Safe Space Logo" class="logo">
+        <a href="index.html" class="back-button">Back to Home</a>
+    </header>
+    <main>
+        <section class="admin-login">
+            <h2>Admin Login</h2>
+            <p>Access the anonymous comments submitted by users.</p>
+            <form id="adminLoginForm">
+                <input type="text" id="adminUsername" placeholder="Username" required>
+                <input type="password" id="adminPassword" placeholder="Password" required>
+                <button type="submit">Login</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <p>© 2025 Safe Space. All rights reserved.</p>
+    </footer>
+    <script>
+        document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('adminUsername').value;
+            const password = document.getElementById('adminPassword').value;
+            const response = await fetch('/api/admin/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            if (response.ok) {
+                window.location.href = 'admin-comments.html';
+            } else {
+                alert('Invalid credentials');
+            }
+        });
+    </script>
+</body>
+</html>

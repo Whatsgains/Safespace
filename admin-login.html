@@ -27,24 +27,32 @@
     <footer>
         <p>© 2025 Safe Space. All rights reserved.</p>
     </footer>
+
     <script>
         document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            console.log('Form submitted');
             const username = document.getElementById('adminUsername').value;
             const password = document.getElementById('adminPassword').value;
-            console.log('Sending:', { username, password });
+
             try {
-                const response = await fetch('/.netlify/functions/app', { // Updated to /app/login
+                const response = await fetch('/.netlify/functions/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password })
                 });
-                console.log('Response status:', response.status);
-                const result = await response.json();
-                console.log('Response data:', result);
+
                 const loginMessage = document.getElementById('login-message');
                 const commentsSection = document.getElementById('comments-section');
+
+                let result;
+                try {
+                    result = await response.json();
+                } catch (e) {
+                    loginMessage.textContent = 'Invalid response from server.';
+                    loginMessage.style.color = 'red';
+                    return;
+                }
+
                 if (response.ok) {
                     loginMessage.textContent = 'Login successful!';
                     loginMessage.style.color = 'green';
@@ -63,14 +71,16 @@
         });
 
         async function loadComments() {
-            const response = await fetch('/.netlify/functions/app/get-comments', { // Updated to /app/get-comments
-                method: 'GET'
-            });
-            const comments = await response.json();
-            const commentsSection = document.getElementById('comments-section');
-            commentsSection.innerHTML = comments.map(comment => `
-                <div><strong>${new Date(comment.submitted_at).toLocaleString()}</strong>: ${comment.content} (Approved: ${comment.is_approved})</div>
-            `).join('');
+            try {
+                const response = await fetch('/.netlify/functions/get_comments');
+                const comments = await response.json();
+                const commentsSection = document.getElementById('comments-section');
+                commentsSection.innerHTML = comments.map(comment => `
+                    <div><strong>${new Date(comment.submitted_at).toLocaleString()}</strong>: ${comment.content} (Approved: ${comment.is_approved})</div>
+                `).join('');
+            } catch (e) {
+                document.getElementById('comments-section').innerHTML = 'Failed to load comments.';
+            }
         }
     </script>
 </body>

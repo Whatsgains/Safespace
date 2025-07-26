@@ -30,30 +30,42 @@
     <script>
         document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            console.log('Form submitted');
             const username = document.getElementById('adminUsername').value;
             const password = document.getElementById('adminPassword').value;
-            const response = await fetch('/.netlify/functions/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
-            });
-            const result = await response.json();
-            const loginMessage = document.getElementById('login-message');
-            const commentsSection = document.getElementById('comments-section');
-            if (response.ok) {
-                loginMessage.textContent = 'Login successful!';
-                loginMessage.style.color = 'green';
-                commentsSection.style.display = 'block';
-                loadComments();
-            } else {
-                loginMessage.textContent = result.error || 'Invalid credentials';
-                loginMessage.style.color = 'red';
-                commentsSection.style.display = 'none';
+            console.log('Sending:', { username, password });
+            try {
+                const response = await fetch('/.netlify/functions/app', { // Updated from /login to /app
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                console.log('Response status:', response.status);
+                const result = await response.json();
+                console.log('Response data:', result);
+                const loginMessage = document.getElementById('login-message');
+                const commentsSection = document.getElementById('comments-section');
+                if (response.ok) {
+                    loginMessage.textContent = 'Login successful!';
+                    loginMessage.style.color = 'green';
+                    commentsSection.style.display = 'block';
+                    loadComments();
+                } else {
+                    loginMessage.textContent = result.error || 'Invalid credentials';
+                    loginMessage.style.color = 'red';
+                    commentsSection.style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Fetch or JSON parse error:', error);
+                document.getElementById('login-message').textContent = 'Error connecting to server or invalid response';
+                document.getElementById('login-message').style.color = 'red';
             }
         });
 
         async function loadComments() {
-            const response = await fetch('/.netlify/functions/get-comments');
+            const response = await fetch('/.netlify/functions/app', { // Updated from /get-comments to /app
+                method: 'GET' // Assuming get-comments is now part of the same app.py
+            });
             const comments = await response.json();
             const commentsSection = document.getElementById('comments-section');
             commentsSection.innerHTML = comments.map(comment => `
